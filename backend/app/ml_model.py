@@ -48,6 +48,9 @@ def predict_probability(payment: PaymentEvent, weights: list[float]) -> float:
 
 
 def train_model(payments: list[PaymentEvent], epochs: int = 220, learning_rate: float = 0.18) -> dict:
+    if not payments:
+        raise ValueError("Cannot train on an empty payment list.")
+
     weights = [0.0 for _ in features(payments[0])]
     for _ in range(epochs):
         gradients = [0.0 for _ in weights]
@@ -95,10 +98,12 @@ def score_with_model(payment: PaymentEvent, model: dict | None = None) -> RiskSc
     if loaded_model is None:
         raise FileNotFoundError("Train the risk model with scripts/evaluate.py first.")
 
+    feature_vector = features(payment)
     probability = round(predict_probability(payment, loaded_model["weights"]), 3)
-    if probability >= 0.70:
+
+    if probability >= 0.75:
         priority = "HIGH"
-    elif probability >= 0.45:
+    elif probability >= 0.48:
         priority = "MEDIUM"
     else:
         priority = "LOW"
@@ -108,8 +113,8 @@ def score_with_model(payment: PaymentEvent, model: dict | None = None) -> RiskSc
         priority=priority,
         features={
             "model_type": loaded_model["model_type"],
-            "amount_scaled": round(features(payment)[1], 3),
-            "success_history": round(features(payment)[2], 3),
-            "failure_history": round(features(payment)[3], 3),
+            "amount_scaled": round(feature_vector[1], 3),
+            "success_history": round(feature_vector[2], 3),
+            "failure_history": round(feature_vector[3], 3),
         },
     )

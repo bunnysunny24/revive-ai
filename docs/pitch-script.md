@@ -1,31 +1,50 @@
-# Five-Minute Pitch Script
+# Five-Minute Pitch Video Script (Track 03)
 
-## 0:00-0:30 - Problem
+## 0:00 – 0:45: The Problem & The Core Insight
+"Hi everyone, I'm presenting **ReviveAI** for **Track 03 — AI Revenue Recovery**.
 
-Failed payments are not just payment events. They are leaked revenue. A merchant may know that a payment failed, but the harder question is what to do next, whether it is safe to do it automatically, and whether the action recovered money.
+Every day, online merchants lose significant revenue to payment failures, checkout drop-offs, and subscription declines. Most gateways merely notify merchants that a payment failed, leaving money on the table. But revenue loss rarely happens in a single step, and recovering it requires more than blindly spamming retries.
 
-## 0:30-1:30 - Demo
+The central thesis of ReviveAI is: **The AI recommends, but the policy engine controls.** We close the loop from detection to diagnosis, bounded intervention, gateway execution, and measured revenue recovery — while enforcing strict financial guardrails."
 
-This is ReviveAI. It analyzed a synthetic batch of failed payments, identified the highest recovery opportunities, and ranked them by recovery probability. For this payment, the system shows the amount, failure type, root cause, recommended intervention, policy decision, and audit trail.
+---
 
-Now I execute recovery. The action goes through the Razorpay test adapter only after the policy engine approves it. The result is recorded immediately in the audit trail.
+## 0:45 – 2:00: Live Demo — The Autonomous Recovery Loop
+*(Screen recording shows the ReviveAI dashboard at `http://localhost:8000`)*
 
-## 1:30-2:30 - Architecture
+"Here is the ReviveAI live dashboard. When I click **Run Recovery Batch**, the engine processes our 10,000-payment dataset in real time. Notice our metrics:
+- Over **INR 7 Million recovered** across 2,272 transactions.
+- An **89.8% recovery rate** on actionable interventions.
+- Multi-channel attribution across Automated Retries, SMS Links, and Email Links.
+- And critically: **0 policy violations and 0 unauthorized actions**.
 
-The architecture is data to ML to agent to policy to Razorpay to outcome measurement. The important decision is that the AI recommends, but deterministic policy controls all financial actions.
+Let's look at the **Recovery Console**:
+1. **DEMO_SUCCESS**: For a VIP customer with 9 prior successes experiencing a transient bank timeout, ReviveAI diagnoses the root cause as temporary provider rails degradation. It checks all 6 policy gates — amount cap, customer consent, cooldown window, and retry budget — and autonomously executes recovery.
+2. **DEMO_BLOCKED**: Here is a high-value checkout drop-off for INR 24,999. Our policy engine immediately stops automated execution because it exceeds the INR 10,000 limit, routing it to human high-touch sales instead of risking an unmonitored action."
 
-The risk engine estimates recovery likelihood. The diagnosis agent explains the likely root cause. The planner proposes retry, payment link, or escalation. The policy engine checks retry limits, amount limit, customer opt-out, cooldown, and current payment state.
+---
 
-## 2:30-3:30 - Evaluation
+## 2:00 – 3:15: Failure Recovery & Bounded Execution
+"The buildathon specifically asks: *What broke, and how did you get out?*
 
-I evaluate ReviveAI on 10,000 synthetic payment records. The report includes precision, recall, F1, false-positive cost, recovered revenue, recovery rate, human escalation rate, policy blocks, and policy violations.
+Let me show you **DEMO_FAIL7**:
+When we execute this transaction, we simulate a realistic **Razorpay 504 Gateway Timeout**. In an unconstrained AI system, this might trigger a runaway retry loop or double-charge the buyer. 
 
-The main business metric is recovered revenue across the batch, not just model accuracy.
+In ReviveAI, the failure is caught by our Razorpay adapter. It preserves the merchant retry budget, immediately records a `provider_failure_escalated` event in our immutable audit trail, and safely escalates the case to human review without looping."
 
-## 3:30-4:15 - Failure Handling
+---
 
-I intentionally simulate a Razorpay test API timeout. ReviveAI records the provider failure, avoids retry loops, preserves retry budget, and escalates the case to a human operator. The audit trail shows exactly what happened.
+## 3:15 – 4:15: Architecture & Machine Learning Efficacy
+*(Navigate to the 'Evaluation & ML' tab)*
 
-## 4:15-5:00 - Closing
+"Under the hood, ReviveAI uses a pure-Python, zero-dependency Logistic Regression model trained across a 70/15/15 train-validation-test split.
+- Our trainable ML model achieves an **F1 score of 0.586** on strictly held-out test data, outperforming our interpretable baseline of 0.561.
+- We tune the decision threshold systematically on validation data to minimize false-positive outreach costs.
+- The entire application runs natively on the Python 3.10+ standard library with zero external pip dependencies."
 
-The main idea is controlled autonomy. ReviveAI closes the loop from detection to recovery, but it keeps every money action explainable, bounded, gated, and auditable. That is the difference between an AI demo and a financial workflow I would be willing to trust.
+---
+
+## 4:15 – 5:00: Closing
+"ReviveAI doesn't just identify revenue at risk — it wins it back with measured monetary impact, compliant escalation, deterministic stopping rules, and an immutable audit trail.
+
+Thank you, and I look forward to your questions!"

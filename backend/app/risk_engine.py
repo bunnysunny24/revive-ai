@@ -48,6 +48,8 @@ def score_payment(payment: PaymentEvent) -> RiskScore:
             "failure_signal": round(failure_signal, 3),
             "amount_signal": amount_signal,
             "recency_signal": recency_signal,
+            "subscription_signal": subscription_signal,
+            "abandonment_signal": abandonment_signal,
             "failure_penalty": round(failure_penalty, 3),
         },
     )

@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any
 
 
@@ -22,6 +22,7 @@ class PaymentEvent:
     recovered: bool = False
     escalated: bool = False
     blocked: bool = False
+    recovery_channel: str = ""
 
 
 @dataclass
@@ -36,6 +37,7 @@ class Diagnosis:
     root_cause: str
     reasoning: str
     recommended_action: str
+    recovery_channel: str = "auto_retry"
 
 
 @dataclass
@@ -44,6 +46,7 @@ class RecoveryPlan:
     delay_minutes: int
     max_retries: int
     explanation: str
+    recovery_channel: str = "auto_retry"
 
 
 @dataclass
@@ -62,7 +65,7 @@ class AuditEvent:
     @classmethod
     def create(cls, payment_id: str, event_type: str, **detail: Any) -> "AuditEvent":
         return cls(
-            timestamp=datetime.utcnow().isoformat(timespec="seconds") + "Z",
+            timestamp=datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z"),
             payment_id=payment_id,
             event_type=event_type,
             detail=detail,

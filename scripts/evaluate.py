@@ -31,11 +31,11 @@ def load() -> list[PaymentEvent]:
                 previous_failures=int(row["previous_failures"]),
                 attempts=int(row["attempts"]),
                 customer_tier=row["customer_tier"],
-                subscription_active=row["subscription_active"] == "true",
-                checkout_abandoned=row["checkout_abandoned"] == "true",
-                customer_opted_out=row["customer_opted_out"] == "true",
+                subscription_active=row["subscription_active"].lower() in {"true", "1", "yes"},
+                checkout_abandoned=row["checkout_abandoned"].lower() in {"true", "1", "yes"},
+                customer_opted_out=row["customer_opted_out"].lower() in {"true", "1", "yes"},
                 last_attempt_minutes=int(row["last_attempt_minutes"]),
-                expected_recoverable=row["expected_recoverable"] == "true",
+                expected_recoverable=row["expected_recoverable"].lower() in {"true", "1", "yes"},
             )
             for row in csv.DictReader(handle)
         ]
@@ -78,6 +78,7 @@ def metrics_for(payments: list[PaymentEvent], scorer, threshold: float) -> dict:
 def business_metrics(payments: list[PaymentEvent], scorer, threshold: float) -> dict:
     attempted = recovered = escalated = blocked = provider_failures = 0
     recovered_revenue = 0
+    channel_recovered = {}
 
     for payment in payments:
         risk = scorer(payment)
@@ -95,12 +96,14 @@ def business_metrics(payments: list[PaymentEvent], scorer, threshold: float) -> 
 
         attempted += 1
         result = execute_test_action(payment, plan)
+        ch = plan.recovery_channel or "auto_retry"
         if not result["ok"]:
             provider_failures += 1
             escalated += 1
         elif result.get("recovered"):
             recovered += 1
             recovered_revenue += payment.amount
+            channel_recovered[ch] = channel_recovered.get(ch, 0) + payment.amount
         else:
             escalated += 1
 
@@ -112,6 +115,7 @@ def business_metrics(payments: list[PaymentEvent], scorer, threshold: float) -> 
         "human_escalations": escalated,
         "policy_blocks": blocked,
         "provider_failures": provider_failures,
+        "channel_recovered": channel_recovered,
     }
 
 
@@ -145,16 +149,23 @@ def main() -> None:
             [
                 "# ReviveAI Evaluation Report",
                 "",
-                f"Payments analyzed: {len(payments)}",
-                f"Train/validation/test split: {len(train)}/{len(validation)}/{len(test)}",
-                f"Predicted at risk: {heuristic_test['predicted_at_risk']} on held-out test",
-                f"Interventions attempted: {business['interventions_attempted']}",
-                f"Recoveries: {business['recoveries']}",
+                f"Payments analyzed: {len(payments):,}",
+                f"Train/validation/test split: {len(train):,}/{len(validation):,}/{len(test):,}",
+                f"Predicted at risk: {heuristic_test['predicted_at_risk']:,} on held-out test",
+                f"Interventions attempted: {business['interventions_attempted']:,}",
+                f"Recoveries: {business['recoveries']:,}",
                 f"Recovered revenue: INR {business['recovered_revenue']:,}",
                 f"Recovery rate: {business['recovery_rate']:.1%}",
-                f"Human escalations: {business['human_escalations']}",
-                f"Policy blocks: {business['policy_blocks']}",
-                f"Provider failures handled: {business['provider_failures']}",
+                f"Human escalations: {business['human_escalations']:,}",
+                f"Policy blocks: {business['policy_blocks']:,}",
+                f"Provider failures handled: {business['provider_failures']:,}",
+                "",
+                "## Channel Breakdown",
+                "",
+                *[
+                    f"- {channel.replace('_', ' ').title()}: INR {amount:,}"
+                    for channel, amount in business.get("channel_recovered", {}).items()
+                ],
                 "",
                 "## Held-Out Heuristic Risk Metrics",
                 "",
