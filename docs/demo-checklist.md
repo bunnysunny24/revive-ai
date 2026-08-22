@@ -1,21 +1,18 @@
 # Demo Checklist
 
-## Before Recording
-
-Run:
-
+Run locally:
 ```bash
 python scripts/generate_dataset.py --records 10000
 python scripts/evaluate.py
-python -m unittest discover -s tests
+python -m unittest discover -s tests -v
 python backend/server.py
 ```
 
-Open:
-
+Then open locally `http://localhost:8000` or use the live deployment:
 ```text
-http://localhost:8000
+https://revive-ai-hlmx.onrender.com
 ```
+
 
 ## Recording Flow
 

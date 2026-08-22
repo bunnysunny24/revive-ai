@@ -51,19 +51,28 @@ Latest seeded model result:
 
 ### Business Metrics
 
-- payments analyzed
-- predicted at-risk payments
-- interventions attempted
-- recovered count
-- recovered revenue
-- recovery rate
-- human escalation count
+- **Payments Analyzed**: 10,000
+- **Predicted At-Risk**: 1,093 (on held-out test split)
+- **Interventions Attempted**: 2,529
+- **Recovered Count**: 2,272
+- **Recovered Revenue**: INR 7,026,643
+- **Batch Recovery Rate**: 89.8%
+- **Human Escalation Count**: 5,329
+- **Policy Blocks**: 5,072
+- **Handled Provider Failures**: 49
+
+### Channel Breakdown
+
+- **Auto Retry**: INR 5,214,053
+- **SMS Recovery Link**: INR 1,390,487
+- **Email Recovery Link**: INR 422,103
 
 ### Safety Metrics
 
-- unauthorized action rate
-- policy violation rate
-- retry-limit violations
+- **Unauthorized Action Rate**: 0.0%
+- **Policy Violation Rate**: 0.0%
+- **Retry-Limit Violations**: 0
+
 
 ## Run
 
