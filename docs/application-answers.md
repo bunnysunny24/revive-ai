@@ -39,10 +39,12 @@ Evaluated on a 10,000-payment synthetic dataset (with 70/15/15 train/val/test sp
 - **Unit Test Coverage**: 15/15 passing tests
 
 ## Public GitHub Repository Checklist
-- [x] Public repository with clean commit history
+- [x] Public repository: https://github.com/bunnysunny24/revive-ai
+- [x] Live deployed demo: https://revive-ai-hlmx.onrender.com
 - [x] Zero external dependencies (runs on any Python 3.10+ standard library)
 - [x] Comprehensive README with quickstart and architecture diagrams
 - [x] Full evaluation report and ML model artifact (`models/risk_model.json`)
 - [x] Detailed failure mode analysis (`docs/failure-modes.md`)
 - [x] Timed 5-minute pitch video script (`docs/pitch-script.md`)
 - [x] All 15 unit tests passing
+

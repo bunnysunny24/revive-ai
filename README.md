@@ -6,7 +6,10 @@
 ![Track 03 Badge](https://img.shields.io/badge/Track%2003-AI%20Revenue%20Recovery-0b5fff?style=for-the-badge)
 ![Zero Dependencies](https://img.shields.io/badge/Dependencies-Zero%20(Python%20Stdlib)-107e4a?style=for-the-badge)
 ![Test Status](https://img.shields.io/badge/Unit%20Tests-15%2F15%20Passing-107e4a?style=for-the-badge)
-![Safety Compliance](https://img.shields.io/badge/Policy%20Violations-0.0%25-107e4a?style=for-the-badge)
+![Live Demo](https://img.shields.io/badge/Live%20Demo-Online-0b5fff?style=for-the-badge)
+
+🌐 **Live Deployed Application**: [https://revive-ai-hlmx.onrender.com](https://revive-ai-hlmx.onrender.com)
+
 
 ---
 
