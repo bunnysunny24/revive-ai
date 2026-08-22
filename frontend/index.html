@@ -85,8 +85,50 @@
 
       <!-- VIEW 1: DASHBOARD VIEW -->
       <div id="view-dashboard" class="view-content active">
+        <!-- Interactive Reviewer & Judge Quick-Test Guide -->
+        <section class="reviewer-guide">
+          <div class="guide-header">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span class="guide-badge">REVIEWER GUIDE</span>
+              <strong>How to Test & Verify Track 03 Requirements (5-Minute Evaluation)</strong>
+            </div>
+            <button class="guide-toggle-btn" id="guide-toggle">Collapse Guide ▲</button>
+          </div>
+          <div class="guide-steps" id="guide-steps-body">
+            <div class="guide-step">
+              <div class="step-num">1</div>
+              <div>
+                <strong>Batch Recovery</strong>
+                <p>Click <button class="inline-action" onclick="document.querySelector('#run-batch').click()">Run Recovery Batch</button> above to see autonomous batch recovery across hundreds of transactions with zero policy violations.</p>
+              </div>
+            </div>
+            <div class="guide-step">
+              <div class="step-num">2</div>
+              <div>
+                <strong>Transient Success</strong>
+                <p>Click <button class="inline-action" data-demo="DEMO_SUCCESS">DEMO_SUCCESS</button> to inspect a VIP customer transient bank timeout recovered autonomously via auto-retry.</p>
+              </div>
+            </div>
+            <div class="guide-step">
+              <div class="step-num">3</div>
+              <div>
+                <strong>Policy Gating</strong>
+                <p>Click <button class="inline-action" data-demo="DEMO_BLOCKED">DEMO_BLOCKED</button> to see the INR 10,000 policy cap halt an automated INR 24,999 checkout abandonment.</p>
+              </div>
+            </div>
+            <div class="guide-step">
+              <div class="step-num">4</div>
+              <div>
+                <strong>Failure Recovery</strong>
+                <p>Click <button class="inline-action" data-demo="DEMO_FAIL7">DEMO_FAIL7</button> and click <em>Execute</em> to verify safe handling of a 504 gateway timeout with preserved retry budget.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <!-- Live KPI Metrics Cards -->
         <section class="metrics-grid" id="metrics"></section>
+
 
         <!-- Value Prop Pillars -->
         <section class="pillars-grid">

@@ -116,15 +116,21 @@ http://localhost:8000
 
 ---
 
-## 🎥 Reviewer Demo Path & Presets
+## 🔍 Reviewer Evaluation Guide: Step-by-Step Verification
 
-1. **Dashboard & Metrics**: Click **Run Recovery Batch** to witness autonomous revenue recovery across hundreds of cases with real-time KPI updates.
-2. **Preset 1: `DEMO_SUCCESS`** — Transient bank timeout with VIP customer history. Diagnosis prescribes automated retry after cooldown. Passes all 6 policy gates and successfully captures revenue.
-3. **Preset 2: `DEMO_BLOCKED`** — High-value checkout drop-off (INR 24,999). Policy engine blocks automatic execution because amount exceeds the INR 10,000 limit, routing to human high-touch sales.
-4. **Preset 3: `DEMO_FAIL7`** — Simulated Razorpay 504 gateway timeout. System preserves the merchant retry budget, records the provider error in the audit log, and safely escalates to human review without looping.
-5. **Audit Logs & Evaluation Views**: Explore immutable audit logs and side-by-side ML vs Heuristic tables directly in the top navigation tabs.
+Judges and reviewers can evaluate all Track 03 capabilities in **under 5 minutes** either via the live web application at **[https://revive-ai-hlmx.onrender.com](https://revive-ai-hlmx.onrender.com)** or locally.
+
+| Step | Action to Perform | Expected System Behavior & What to Check | Track 03 Requirement Verified |
+| :--- | :--- | :--- | :--- |
+| **1. Autonomous Batch Recovery** | Click the blue **"Run Recovery Batch"** button in the header. | The system processes hundreds of at-risk transactions. Real-time KPI metrics update immediately: **INR 7,026,643+ recovered**, **89.8% recovery rate**, multi-channel breakdown (Auto-retry, SMS, Email), and **0 policy violations**. | *Measured Money Recovered across Batch* |
+| **2. Transient Failure Recovery** | Click the **`DEMO_SUCCESS`** chip in the demo strip. Click **"Execute Recovery Workflow"**. | For a VIP customer with 9 prior successes and a bank timeout, AI diagnoses a temporary rail glitch. All 6 policy checks turn green. Recovery succeeds, status transitions to `CAPTURED`, and a `revenue_recovered` audit event is emitted. | *Detection & Intervention Determination* |
+| **3. High-Value Policy Gating** | Click the **`DEMO_BLOCKED`** chip in the demo strip. | High-ticket checkout abandonment for INR 24,999. Policy engine immediately halts automated outreach because it exceeds the INR 10,000 automatic limit. "Action Stopped" button is disabled and routed to human sales. | *Deterministic Stopping Rules & Policy Gating* |
+| **4. Provider Failure Escalation** | Click the **`DEMO_FAIL7`** chip and click **"Execute Recovery Workflow"**. | Simulates a realistic **Razorpay 504 Gateway Timeout**. System catches the provider error, **preserves the merchant retry budget**, writes a `provider_failure_escalated` audit event, and safely routes to human review without looping. | *Compliant Escalation & Failure Recovery* |
+| **5. Immutable Audit Trail** | Navigate to the **"Audit Logs"** tab in the sidebar. Filter by *Recovered*, *Gateway Action*, or *Blocked*. | Inspect chronological, UTC-timestamped audit records with full JSON metadata payloads for every transaction ingestion, policy evaluation, gateway attempt, and recovery. | *Immutable Audit Trail* |
+| **6. ML Model & Safety Benchmarks** | Navigate to the **"Evaluation & ML"** tab in the sidebar. | View side-by-side benchmark tables comparing the pure-Python Logistic Regression model (`F1: 0.586`) with the heuristic baseline (`F1: 0.561`), safety verification checklist (0 violations), and raw report. | *Meaningful AI & ML Efficacy* |
 
 ---
+
 
 ## 📂 Repository Structure
 

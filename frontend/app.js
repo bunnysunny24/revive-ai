@@ -528,6 +528,16 @@ function initEventListeners() {
     });
   }
 
+  // Reviewer Guide Toggle
+  const guideToggle = document.querySelector("#guide-toggle");
+  const guideBody = document.querySelector("#guide-steps-body");
+  if (guideToggle && guideBody) {
+    guideToggle.addEventListener("click", () => {
+      const isCollapsed = guideBody.classList.toggle("collapsed");
+      guideToggle.textContent = isCollapsed ? "Expand Guide ▼" : "Collapse Guide ▲";
+    });
+  }
+
   // Refresh evaluation button
   const evalBtn = document.querySelector("#refresh-eval-btn");
   if (evalBtn) {
@@ -539,6 +549,7 @@ function initEventListeners() {
     });
   }
 }
+
 
 // Initial Boot
 initEventListeners();

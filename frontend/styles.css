@@ -314,12 +314,121 @@ h2 {
   gap: 22px;
 }
 
+/* Reviewer & Judge Guide Banner */
+.reviewer-guide {
+  background: linear-gradient(135deg, #0b1528 0%, #1e293b 100%);
+  border: 1px solid #334155;
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  color: #ffffff;
+  box-shadow: var(--shadow-md);
+}
+
+.guide-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.guide-badge {
+  background: var(--blue);
+  color: #ffffff;
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+}
+
+.guide-toggle-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #cbd5e1;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.guide-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+}
+
+.guide-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.25s ease;
+}
+
+.guide-steps.collapsed {
+  display: none;
+}
+
+.guide-step {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.step-num {
+  width: 22px;
+  height: 22px;
+  border-radius: var(--radius-full);
+  background: rgba(11, 95, 255, 0.3);
+  border: 1px solid var(--blue);
+  color: #60a5fa;
+  font-size: 12px;
+  font-weight: 800;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.guide-step strong {
+  display: block;
+  font-size: 13px;
+  color: #f1f5f9;
+  margin-bottom: 2px;
+}
+
+.guide-step p {
+  font-size: 11px;
+  color: #94a3b8;
+  line-height: 1.45;
+}
+
+.inline-action {
+  background: rgba(11, 95, 255, 0.25);
+  border: 1px solid rgba(96, 165, 250, 0.4);
+  color: #93c5fd;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.inline-action:hover {
+  background: var(--blue);
+  color: #ffffff;
+}
+
 /* Metrics Grid */
 .metrics-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 14px;
 }
+
 
 .metric-card {
   background: var(--surface);
