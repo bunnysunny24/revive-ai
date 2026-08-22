@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: revive-ai
+    runtime: python
+    buildCommand: "python scripts/generate_dataset.py --records 10000 && python scripts/evaluate.py"
+    startCommand: "python backend/server.py"
+    plan: free

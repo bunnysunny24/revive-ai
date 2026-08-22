@@ -146,10 +146,15 @@ class Handler(BaseHTTPRequestHandler):
         return
 
 
-def run(host: str = "localhost", port: int = 8000) -> None:
+def run(host: str | None = None, port: int | None = None) -> None:
+    import os
+
+    actual_host = host or os.environ.get("HOST", "0.0.0.0")
+    actual_port = int(port or os.environ.get("PORT", 8000))
+
     store.ensure_loaded()
-    server = ThreadingHTTPServer((host, port), Handler)
-    print(f"ReviveAI running at http://{host}:{port}")
+    server = ThreadingHTTPServer((actual_host, actual_port), Handler)
+    print(f"ReviveAI running at http://{actual_host}:{actual_port}")
     try:
         server.serve_forever()
     except KeyboardInterrupt:
