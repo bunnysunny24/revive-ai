@@ -1,0 +1,39 @@
+{
+  "model_type": "pure_python_logistic_regression",
+  "feature_order": [
+    "bias",
+    "amount_scaled",
+    "previous_successes_scaled",
+    "previous_failures_scaled",
+    "attempts_scaled",
+    "subscription_active",
+    "checkout_abandoned",
+    "customer_opted_out",
+    "recent_attempt",
+    "failure_type=bank_timeout",
+    "failure_type=technical_error",
+    "failure_type=issuer_decline",
+    "failure_type=insufficient_funds",
+    "failure_type=expired_method",
+    "failure_type=mandate_failure",
+    "failure_type=checkout_abandonment"
+  ],
+  "weights": [
+    -0.429563,
+    -0.345186,
+    0.827042,
+    -0.595055,
+    -0.331006,
+    -0.040201,
+    0.060143,
+    -0.232587,
+    -0.088657,
+    0.436896,
+    0.294027,
+    -0.451997,
+    -0.442669,
+    -0.35994,
+    0.033978,
+    0.060143
+  ]
+}
