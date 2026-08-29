@@ -19,6 +19,58 @@ payments: dict[str, PaymentEvent] = {}
 audit_events: list[AuditEvent] = []
 _audit_by_payment: dict[str, list[AuditEvent]] = defaultdict(list)
 
+BUILTIN_DEMO_CASES = [
+
+    PaymentEvent(
+        payment_id="DEMO_SUCCESS",
+        customer_id="CUST9001",
+        amount=8499,
+        status="failed",
+        failure_type="bank_timeout",
+        previous_successes=9,
+        previous_failures=0,
+        attempts=1,
+        customer_tier="vip",
+        subscription_active=True,
+        checkout_abandoned=False,
+        customer_opted_out=False,
+        last_attempt_minutes=45,
+        expected_recoverable=True,
+    ),
+    PaymentEvent(
+        payment_id="DEMO_BLOCKED",
+        customer_id="CUST9002",
+        amount=24999,
+        status="failed",
+        failure_type="checkout_abandonment",
+        previous_successes=12,
+        previous_failures=0,
+        attempts=0,
+        customer_tier="vip",
+        subscription_active=True,
+        checkout_abandoned=True,
+        customer_opted_out=False,
+        last_attempt_minutes=60,
+        expected_recoverable=True,
+    ),
+    PaymentEvent(
+        payment_id="DEMO_FAIL7",
+        customer_id="CUST9003",
+        amount=1999,
+        status="failed",
+        failure_type="technical_error",
+        previous_successes=8,
+        previous_failures=0,
+        attempts=0,
+        customer_tier="gold",
+        subscription_active=True,
+        checkout_abandoned=False,
+        customer_opted_out=False,
+        last_attempt_minutes=50,
+        expected_recoverable=True,
+    ),
+]
+
 
 def load_payments() -> None:
     with _lock:
@@ -26,13 +78,40 @@ def load_payments() -> None:
         audit_events.clear()
         _audit_by_payment.clear()
 
+        # Ingest built-in demo cases first
+        for demo in BUILTIN_DEMO_CASES:
+            # Create fresh copy to reset state on load
+            event = PaymentEvent(
+                payment_id=demo.payment_id,
+                customer_id=demo.customer_id,
+                amount=demo.amount,
+                status=demo.status,
+                failure_type=demo.failure_type,
+                previous_successes=demo.previous_successes,
+                previous_failures=demo.previous_failures,
+                attempts=demo.attempts,
+                customer_tier=demo.customer_tier,
+                subscription_active=demo.subscription_active,
+                checkout_abandoned=demo.checkout_abandoned,
+                customer_opted_out=demo.customer_opted_out,
+                last_attempt_minutes=demo.last_attempt_minutes,
+                expected_recoverable=demo.expected_recoverable,
+            )
+            payments[event.payment_id] = event
+            ingest_audit = AuditEvent.create(event.payment_id, "payment_ingested", status=event.status)
+            audit_events.append(ingest_audit)
+            _audit_by_payment[event.payment_id].append(ingest_audit)
+
         if not DATASET.exists():
             return
 
         with DATASET.open(newline="", encoding="utf-8") as handle:
             for row in csv.DictReader(handle):
+                pid = row["payment_id"]
+                if pid in payments:
+                    continue  # preserve demo cases
                 event = PaymentEvent(
-                    payment_id=row["payment_id"],
+                    payment_id=pid,
                     customer_id=row["customer_id"],
                     amount=int(row["amount"]),
                     status=row["status"],
@@ -57,6 +136,7 @@ def ensure_loaded() -> None:
     with _lock:
         if not payments:
             load_payments()
+
 
 
 def ingest_webhook_payment(payload: dict) -> dict:
