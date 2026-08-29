@@ -603,13 +603,20 @@ function initEventListeners() {
 
   // Queue filter pills
   document.querySelectorAll("#queue-filters .filter-pill").forEach((pill) => {
-    pill.addEventListener("click", () => {
+    pill.addEventListener("click", async () => {
       document.querySelectorAll("#queue-filters .filter-pill").forEach((p) => p.classList.remove("active"));
       pill.classList.add("active");
       currentFilter = pill.dataset.filter;
-      renderCases(cachedCases);
+      try {
+        const filterParam = currentFilter === "all" ? "" : `&filter=${currentFilter}`;
+        const filteredCases = await getJson(`/api/payments?limit=50${filterParam}`);
+        renderCases(filteredCases);
+      } catch (err) {
+        renderCases(cachedCases);
+      }
     });
   });
+
 
   // Audit filter pills
   document.querySelectorAll("#audit-filters .filter-pill").forEach((pill) => {

@@ -109,14 +109,15 @@ class Handler(BaseHTTPRequestHandler):
 
             if parsed.path.startswith("/api/payments/") and parsed.path.endswith("/execute"):
                 parts = parsed.path.strip("/").split("/")
-                if len(parts) >= 2:
-                    payment_id = parts[1]
+                if len(parts) >= 3:
+                    payment_id = parts[-2]
                     store.ensure_loaded()
                     if payment_id not in store.payments:
                         self.json({"error": "Payment not found"}, status=404)
                         return
                     self.json(store.execute(payment_id))
                     return
+
 
 
             self.json({"error": "Endpoint not found"}, status=404)
