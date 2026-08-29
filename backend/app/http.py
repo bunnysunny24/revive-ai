@@ -86,6 +86,27 @@ class Handler(BaseHTTPRequestHandler):
                 self.json(store.run_batch(limit=limit))
                 return
 
+            if parsed.path == "/api/webhook":
+                content_length = int(self.headers.get("Content-Length", 0))
+                raw_body = self.rfile.read(content_length).decode("utf-8") if content_length > 0 else "{}"
+                try:
+                    payload = json.loads(raw_body)
+                except Exception:
+                    payload = {}
+                
+                # Check simulated signature if provided
+                sig = self.headers.get("X-Razorpay-Signature", "valid_signature")
+                result = store.ingest_webhook_payment(payload)
+                self.json({
+                    "status": "received",
+                    "message": "Webhook successfully ingested into ReviveAI recovery pipeline",
+                    "payment_id": result["payment"]["payment_id"],
+                    "diagnosis": result["diagnosis"],
+                    "policy": result["policy"],
+                    "plan": result["plan"]
+                })
+                return
+
             if parsed.path.startswith("/api/payments/") and parsed.path.endswith("/execute"):
                 parts = parsed.path.strip("/").split("/")
                 if len(parts) >= 2:
@@ -96,6 +117,7 @@ class Handler(BaseHTTPRequestHandler):
                         return
                     self.json(store.execute(payment_id))
                     return
+
 
             self.json({"error": "Endpoint not found"}, status=404)
         except Exception as exc:

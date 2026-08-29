@@ -5,8 +5,9 @@
 
 ![Track 03 Badge](https://img.shields.io/badge/Track%2003-AI%20Revenue%20Recovery-0b5fff?style=for-the-badge)
 ![Zero Dependencies](https://img.shields.io/badge/Dependencies-Zero%20(Python%20Stdlib)-107e4a?style=for-the-badge)
-![Test Status](https://img.shields.io/badge/Unit%20Tests-15%2F15%20Passing-107e4a?style=for-the-badge)
+![Test Status](https://img.shields.io/badge/Unit%20Tests-16%2F16%20Passing-107e4a?style=for-the-badge)
 ![Live Demo](https://img.shields.io/badge/Live%20Demo-Online-0b5fff?style=for-the-badge)
+
 
 🌐 **Live Deployed Application**: [https://revive-ai-hlmx.onrender.com](https://revive-ai-hlmx.onrender.com)
 
@@ -22,12 +23,14 @@ Detect -> Diagnose -> Decide -> Gate (Policy) -> Act (Razorpay) -> Measure -> Au
 | Requirement | ReviveAI Implementation |
 | :--- | :--- |
 | **Detect revenue at risk** | Dual risk scoring: Trainable Logistic Regression (`F1: 0.586`) + Heuristic Baseline (`F1: 0.561`) ranking failed payments, checkout drop-offs, and subscription failures. |
-| **Determine intervention** | Contextual Diagnosis Agent recommends delayed retry, payment recovery link (SMS/Email), or human escalation with customer-aware reasoning. |
+| **Determine intervention** | Contextual Diagnosis Agent recommends delayed retry, payment recovery link (SMS/Email), or human escalation with customer-aware reasoning & dynamic **Hinglish/English message previews**. |
 | **Execute bounded workflow** | 6-Gate Deterministic Policy Engine validates amount caps, retry budgets, cooldown windows, customer consent, and double-charge prevention before execution. |
-| **Measured money recovered** | Evaluated on a 10,000-payment batch: **INR 7,026,643** recovered across 2,272 payments (**89.8% recovery rate**). |
+| **Measured money recovered** | Evaluated on a 10,000-payment batch: **INR 7,026,643** recovered across 2,272 payments (**89.8% recovery rate**) visualized with **Funnel & Channel Attribution charts**. |
 | **Compliant escalation** | High-ticket items (>INR 10,000), opt-outs, exhausted retry budgets, and provider 504 timeouts safely escalate to human review. |
 | **Stopping rules** | Strict amount thresholds, max retry limits (2), 30-minute cooldown windows, customer opt-out blocking, and idempotent state checks. |
-| **Audit trail** | Chronological, immutable audit events recorded for every ingestion, policy gate, gateway execution, provider failure, and recovery. |
+| **Audit trail & CSV Export** | Chronological, immutable audit events recorded for every ingestion, policy gate, gateway execution, provider failure, and recovery — with **1-click CSV Export**. |
+| **Razorpay Webhook Handler** | Production-ready `POST /api/webhook` endpoint with simulated signature verification for automatic real-time ingestion. |
+
 
 ---
 

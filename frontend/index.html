@@ -129,9 +129,32 @@
         <!-- Live KPI Metrics Cards -->
         <section class="metrics-grid" id="metrics"></section>
 
+        <!-- Recovery Funnel Pipeline -->
+        <section class="funnel-card" id="funnel-section">
+          <div class="funnel-header">
+            <div>
+              <h3>Autonomous Recovery Funnel & Conversion</h3>
+              <small style="color: var(--muted);">Real-time drop-off & recovery pipeline from ingestion to captured revenue</small>
+            </div>
+            <span class="badge success" id="funnel-conversion-rate">89.8% Recovery Efficiency</span>
+          </div>
+          <div class="funnel-steps" id="funnel-steps"></div>
+        </section>
+
+        <!-- Multi-Channel Revenue Distribution -->
+        <section class="channel-dist-card" id="channel-dist-section">
+          <div class="channel-dist-header">
+            <div>
+              <h3>Multi-Channel Revenue Attribution</h3>
+              <small style="color: var(--muted);">Recovered volume by execution pathway</small>
+            </div>
+          </div>
+          <div class="channel-bars" id="channel-bars"></div>
+        </section>
 
         <!-- Value Prop Pillars -->
         <section class="pillars-grid">
+
           <div class="pillar-card">
             <div class="pillar-icon blue">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
@@ -255,13 +278,20 @@
             <h2>Immutable Audit Trail Explorer</h2>
             <p class="muted">Every ingestion, policy evaluation, gateway execution, provider failure, and recovery event is permanently recorded.</p>
           </div>
-          <div class="filter-pills" id="audit-filters">
-            <button class="filter-pill active" data-audit-filter="all">All Events</button>
-            <button class="filter-pill" data-audit-filter="revenue_recovered">Recovered</button>
-            <button class="filter-pill" data-audit-filter="razorpay_test_action">Gateway Action</button>
-            <button class="filter-pill" data-audit-filter="recovery_blocked">Blocked</button>
-            <button class="filter-pill" data-audit-filter="provider_failure_escalated">Escalated</button>
+          <div style="display: flex; gap: 10px; align-items: center;">
+            <div class="filter-pills" id="audit-filters">
+              <button class="filter-pill active" data-audit-filter="all">All Events</button>
+              <button class="filter-pill" data-audit-filter="revenue_recovered">Recovered</button>
+              <button class="filter-pill" data-audit-filter="razorpay_test_action">Gateway Action</button>
+              <button class="filter-pill" data-audit-filter="recovery_blocked">Blocked</button>
+              <button class="filter-pill" data-audit-filter="provider_failure_escalated">Escalated</button>
+            </div>
+            <button id="export-audit-csv" class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              Export CSV
+            </button>
           </div>
+
         </div>
         <div class="table-container">
           <table class="data-table">

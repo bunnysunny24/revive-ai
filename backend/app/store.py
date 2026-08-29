@@ -59,6 +59,68 @@ def ensure_loaded() -> None:
             load_payments()
 
 
+def ingest_webhook_payment(payload: dict) -> dict:
+    with _lock:
+        ensure_loaded()
+        # Parse Razorpay nested payload or flat format
+        payment_entity = payload.get("payload", {}).get("payment", {}).get("entity", {}) if "payload" in payload else payload
+
+        payment_id = payment_entity.get("id") or payment_entity.get("payment_id") or f"pay_wh_{len(payments) + 1:04d}"
+        amount = payment_entity.get("amount", 2500)
+        if isinstance(amount, (int, float)) and amount > 100000:
+            # If in paise (Razorpay standard format), convert to INR
+            amount = int(amount / 100)
+        else:
+            amount = int(amount)
+
+        notes = payment_entity.get("notes", {})
+        customer_id = payment_entity.get("customer_id") or notes.get("customer_id", f"cust_{payment_id[-4:]}")
+        customer_tier = payment_entity.get("customer_tier") or notes.get("customer_tier", "silver")
+        
+        # Map failure reasons
+        raw_reason = payment_entity.get("error_reason") or payment_entity.get("failure_type") or "technical_error"
+        failure_type = raw_reason if raw_reason in {
+            "bank_timeout", "technical_error", "checkout_abandonment", 
+            "expired_method", "insufficient_funds", "mandate_failure", "issuer_decline"
+        } else "technical_error"
+
+        subscription_active = bool(payment_entity.get("subscription_active") or notes.get("subscription_active", False))
+        customer_opted_out = bool(payment_entity.get("customer_opted_out") or notes.get("customer_opted_out", False))
+        checkout_abandoned = bool(payment_entity.get("checkout_abandoned", failure_type == "checkout_abandonment"))
+
+        event = PaymentEvent(
+            payment_id=payment_id,
+            customer_id=customer_id,
+            amount=amount,
+            status="failed",
+            failure_type=failure_type,
+            previous_successes=int(payment_entity.get("previous_successes", 3)),
+            previous_failures=int(payment_entity.get("previous_failures", 0)),
+            attempts=int(payment_entity.get("attempts", 0)),
+            customer_tier=customer_tier,
+            subscription_active=subscription_active,
+            checkout_abandoned=checkout_abandoned,
+            customer_opted_out=customer_opted_out,
+            last_attempt_minutes=int(payment_entity.get("last_attempt_minutes", 35)),
+            expected_recoverable=True,
+        )
+
+        payments[event.payment_id] = event
+        ingest_audit = AuditEvent.create(
+            event.payment_id, 
+            "razorpay_webhook_ingested", 
+            event="payment.failed", 
+            source="razorpay_webhook", 
+            amount=event.amount,
+            failure_type=event.failure_type
+        )
+        audit_events.append(ingest_audit)
+        _audit_by_payment[event.payment_id].append(ingest_audit)
+
+        return enrich(event)
+
+
+
 def enrich(payment: PaymentEvent) -> dict:
     with _lock:
         risk = score_payment(payment)

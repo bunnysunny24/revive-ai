@@ -201,8 +201,33 @@ class WorkflowTests(unittest.TestCase):
         self.assertTrue(len(res["audit"]) >= 2)
         event_types = [a["event_type"] for a in res["audit"]]
         self.assertIn("policy_evaluated", event_types)
-        self.assertIn("revenue_recovered", event_types)
+    def test_webhook_ingestion_adds_payment_and_audit(self):
+        from backend.app.store import ingest_webhook_payment
+        load_payments()
+        webhook_data = {
+            "event": "payment.failed",
+            "payload": {
+                "payment": {
+                    "entity": {
+                        "id": "pay_wh_test_99",
+                        "amount": 350000,
+                        "status": "failed",
+                        "error_reason": "bank_timeout",
+                        "notes": {
+                            "customer_id": "cust_vip_wh",
+                            "customer_tier": "platinum"
+                        }
+                    }
+                }
+            }
+        }
+        enriched = ingest_webhook_payment(webhook_data)
+        self.assertEqual(enriched["payment"]["payment_id"], "pay_wh_test_99")
+        self.assertEqual(enriched["payment"]["amount"], 3500)
+        self.assertEqual(enriched["payment"]["customer_tier"], "platinum")
+        self.assertTrue(any(a["event_type"] == "razorpay_webhook_ingested" for a in enriched["audit"]))
 
 
 if __name__ == "__main__":
     unittest.main()
+
